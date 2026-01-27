@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace AbstractPixel.Utility
 {
-    public class Vector3Data
+    public class SaveProfileManager
     {
     
     }

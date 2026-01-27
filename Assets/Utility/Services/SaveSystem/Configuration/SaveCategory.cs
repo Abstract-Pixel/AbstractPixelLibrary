@@ -1,9 +1,13 @@
 using UnityEngine;
 
-namespace AbstractPixel.Utility
+namespace AbstractPixel.Utility.Save
 {
-    public class SaveCategory
+    public enum SaveCategory
     {
+        None,
+        Input,
+        Settings,
+        Game
     
     }
 }

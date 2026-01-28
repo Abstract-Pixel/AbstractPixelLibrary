@@ -7,6 +7,7 @@ namespace AbstractPixel.Utility.Save
         None,
         Input,
         Settings,
+        Achievements,
         Game
     
     }

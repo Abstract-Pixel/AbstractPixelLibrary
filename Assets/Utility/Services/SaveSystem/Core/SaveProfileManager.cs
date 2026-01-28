@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-namespace AbstractPixel.Utility
+namespace AbstractPixel.Utility.Save
 {
     public class SaveProfileManager
     {
@@ -12,12 +12,22 @@ namespace AbstractPixel.Utility
         private SaveSystemConfigSO saveConfig;
         private string profilesRootPath;
 
+        public  string CurrentProfilePath {  get; private set; }
+        public  string CurrentProfileID { get; private set; }
+
         public SaveProfileManager(IDataStorageService _dataStorageService, SaveSystemConfigSO _saveConfig, ISerializer _serializer)
         {
             storageService = _dataStorageService;
             saveConfig = _saveConfig;
             serializer = _serializer;
             profilesRootPath = SavePathGenerator.GetProfilesRootPath();
+        }
+
+        public void SetCurrentActiveProfile(string profileID,string _profilePath)
+        {
+            CurrentProfileID = profileID;
+            CurrentProfilePath = _profilePath;
+
         }
 
         public string CreateProfileDirectory(out string _profileGuid)
@@ -29,6 +39,21 @@ namespace AbstractPixel.Utility
             if (storageService.CreateDirectory(profilePath))
             {
                 CreateGameProfileManifest(profilePath, _profileGuid);
+                return profilePath;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public string CreateCustomProfileDirectory(string customProfileID)
+        {
+            string fullProfileName = SavePathGenerator.GameProfileSavesFolder + customProfileID;
+            string profilePath = Path.Combine(profilesRootPath, fullProfileName);
+            if (storageService.CreateDirectory(profilePath))
+            {
+                CreateGameProfileManifest(profilePath, customProfileID);
                 return profilePath;
             }
             else

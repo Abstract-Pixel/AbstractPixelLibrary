@@ -45,9 +45,9 @@ namespace AbstractPixel.Utility.Save
         public void SaveALL()
         {
             Dictionary<string, ISaveable>.ValueCollection allSaveables = SaveableObjectsRegistry.Values;
-
             IEnumerable<IGrouping<SaveCategory, ISaveable>> groupedSaveables = allSaveables.GroupBy(saveable => saveable.saveCategory);
-
+            string fileExtension = SavePathGenerator.PrimaryFileExtension;
+            string activeProfileId = profileManager.CurrentProfileID;
             foreach (IGrouping<SaveCategory, ISaveable> group in groupedSaveables)
             {
                 SaveCategory category = group.Key;
@@ -56,8 +56,13 @@ namespace AbstractPixel.Utility.Save
                 string fileName = categoryDefinition.CustomFileName;
                 if (string.IsNullOrEmpty(fileName))
                 {
-
+                    fileName = category.ToString();
                 }
+                fileName = fileName+fileExtension;
+
+                SaveFileData categorizedSaveFileDaya = new SaveFileData(fileName,activeProfileId);
+
+
             }
 
 

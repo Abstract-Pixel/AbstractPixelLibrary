@@ -6,7 +6,8 @@ namespace AbstractPixel.Utility.Save
     [CreateAssetMenu(fileName = "SaveSystemConfigSO", menuName = "Utility/SaveSystemConfigSO")]
     public class SaveSystemConfigSO : ScriptableObject
     {
-        [field: SerializeField] public bool useDebugPath { get; private set; } = false;
+        [field: SerializeField] public bool UseDebugPath { get; private set; } = false;
+        [field:SerializeField] public int GameProfileGuidLength { get; private set; } = 6;
         [field: SerializeField] public FileExtension PrimaryFileExtension { get; private set; } = FileExtension.json;
         [field: SerializeField] public FileExtension BackupFileExtension { get; private set; } = FileExtension.bak;
 

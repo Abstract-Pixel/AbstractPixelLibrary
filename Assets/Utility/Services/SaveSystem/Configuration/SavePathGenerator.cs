@@ -17,29 +17,29 @@ namespace AbstractPixel.Utility.Save
         public static readonly string AutoSavesFolder = "AutoSaves";
 
         // Constant Paths
-        public static string DebugPath { get; private set; }
-        public static string ShipPath { get; private set; }
+        public static string DebugRootPath { get; private set; }
+        public static string ShipRootPath { get; private set; }
 
         // Config Properties To Be Initialized
         public static SaveSystemConfigSO saveConfig { get; set; }
-        public static string currentPath { get; set; }
-        public static string primaryFileExtension { get; set; }
-        public static string backupFileExtension { get; set; }
+        public static string CurrentRootPath { get; set; }
+        public static string PrimaryFileExtension { get; set; }
+        public static string BackupFileExtension { get; set; }
 
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void InitializeConstantPaths()
         {
-            DebugPath = Path.Combine(Application.dataPath, DebugRootSaveFolder);
-            ShipPath = Path.Combine(Application.persistentDataPath, RootSaveFolder);
+            DebugRootPath = Path.Combine(Application.dataPath, DebugRootSaveFolder);
+            ShipRootPath = Path.Combine(Application.persistentDataPath, RootSaveFolder);
         }
 
         public static void Initialize(SaveSystemConfigSO config)
         {
             saveConfig = config;
-            currentPath = saveConfig.useDebugPath ? DebugPath : ShipPath;
-            primaryFileExtension = $".{saveConfig.PrimaryFileExtension.ToString().ToLower()}";
-            backupFileExtension = $".{saveConfig.BackupFileExtension.ToString().ToLower()}";
+            CurrentRootPath = saveConfig.UseDebugPath ? DebugRootPath : ShipRootPath;
+            PrimaryFileExtension = $".{saveConfig.PrimaryFileExtension.ToString().ToLower()}";
+            BackupFileExtension = $".{saveConfig.BackupFileExtension.ToString().ToLower()}";
         }
 
         public static string GetPath(SaveCatgeoryDefinition _definition, string _profileId = default)
@@ -54,14 +54,14 @@ namespace AbstractPixel.Utility.Save
         public static string GetAutoSavePath(string profileId)
         {
             // Returns: .../SaveFiles/GameSaves/AutoSave/GameProfile+id/
-            return Path.Combine(currentPath, GameSavesFolder, AutoSavesFolder, profileId);
+            return Path.Combine(CurrentRootPath, GameSavesFolder, AutoSavesFolder, profileId);
         }
 
         #region Private Helper Methods
         private static string GenerateFullPath(SaveCatgeoryDefinition _definition, bool _isBackUp, string _profileId = default)
         {
             string fileName = null;
-            string fileExtension = _isBackUp ? backupFileExtension : primaryFileExtension;
+            string fileExtension = _isBackUp ? BackupFileExtension : PrimaryFileExtension;
             if (string.IsNullOrEmpty(_definition.CustomFileName))
             {
                 fileName = _definition.Category.ToString() + fileExtension;
@@ -86,23 +86,28 @@ namespace AbstractPixel.Utility.Save
 
 
         // 1. GLOBAL PATHS
-        private static string GetGlobalPath()
+        public static string GetGlobalPath()
         {
             // Returns: .../SaveFiles/Global/
-            return Path.Combine(currentPath, GlobalSavesFolder);
+            return Path.Combine(CurrentRootPath, GlobalSavesFolder);
         }
 
         private static string GetGlobalBackupPath()
         {
             // Returns: .../SaveFiles/Global/Backups/
-            return Path.Combine(currentPath, GlobalSavesFolder, GlobalBackupSavesFolder);
+            return Path.Combine(CurrentRootPath, GlobalSavesFolder, GlobalBackupSavesFolder);
         }
 
         // 2. PROFILE PATHS
+        public static string GetProfilesRootPath()
+        {
+            // Returns: .../SaveFiles/GameSaves/Profiles/
+            return Path.Combine(CurrentRootPath, GameSavesFolder, ProfileSavesRootFolder);
+        }
         private static string GetProfilePath(string _profileId)
         {
             // Returns: .../SaveFiles/GameSaves/Profiles/GameProfile+profileId/
-            return Path.Combine(currentPath, GameSavesFolder, ProfileSavesRootFolder, GameProfileSavesFolder + _profileId);
+            return Path.Combine(CurrentRootPath, GameSavesFolder, ProfileSavesRootFolder, GameProfileSavesFolder + _profileId);
         }
 
         private static string GetProfileBackupPath(string _profileId)

@@ -4,7 +4,7 @@ using UnityEngine;
 namespace AbstractPixel.Utility.Save
 {
     [Serializable]
-    public class SaveCatgeoryDefinition
+    public sealed class SaveCatgeoryDefinition
     {
         [HideInInspector]public string DisplayName;
         public SaveCategory Category;

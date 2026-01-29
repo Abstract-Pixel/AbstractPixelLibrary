@@ -53,19 +53,36 @@ namespace AbstractPixel.Utility.Save
                 SaveCategory category = group.Key;
                 string profileId = profileManager.CurrentProfileID;
                 SaveCatgeoryDefinition categoryDefinition = saveConfig.GetCategoryDefinition(category);
-                string fileName = categoryDefinition.CustomFileName;
-                if (string.IsNullOrEmpty(fileName))
+
+                SaveFileData categorizedSaveFileData;
+                string fileName = SavePathGenerator.GetFileNameBasedOnCategoryDefinition(categoryDefinition);
+                string fullSavePath = SavePathGenerator.GetPath(categoryDefinition, activeProfileId);
+
+                if (categoryDefinition.DirectoryScope == SaveScope.Global)
                 {
-                    fileName = category.ToString();
+                    categorizedSaveFileData = new SaveFileData(fileName);
                 }
-                fileName = fileName+fileExtension;
+                else
+                {
+                    categorizedSaveFileData = new SaveFileData(fileName,activeProfileId);
+                }
 
-                SaveFileData categorizedSaveFileDaya = new SaveFileData(fileName,activeProfileId);
+                foreach (ISaveable saveable in group)
+                {
+                    object capturedData = saveable.CaptureData();
+                    if (capturedData == null)
+                    {
+                        continue;
+                    }
+                    categorizedSaveFileData.DataMap.Add(saveable.Guid, capturedData);
+                }
 
+                if(serializer.TrySerialize(categorizedSaveFileData, out string  json))
+                {
+                    fileStorageService.SaveFile(json, fullSavePath);
 
+                }
             }
-
-
         }
 
         public void LoadALL()

@@ -57,8 +57,7 @@ namespace AbstractPixel.Utility.Save
             return Path.Combine(CurrentRootPath, GameSavesFolder, AutoSavesFolder, profileId);
         }
 
-        #region Private Helper Methods
-        private static string GenerateFullPath(SaveCatgeoryDefinition _definition, bool _isBackUp, string _profileId = default)
+        public static string GetFileNameBasedOnCategoryDefinition(SaveCatgeoryDefinition _definition, bool _isBackUp=false)
         {
             string fileName = null;
             string fileExtension = _isBackUp ? BackupFileExtension : PrimaryFileExtension;
@@ -70,6 +69,14 @@ namespace AbstractPixel.Utility.Save
             {
                 fileName = _definition.CustomFileName + fileExtension;
             }
+
+            return fileName;
+        }
+
+        #region Helper Methods
+        private static string GenerateFullPath(SaveCatgeoryDefinition _definition, bool _isBackUp, string _profileId = default)
+        {
+            string fileName = GetFileNameBasedOnCategoryDefinition(_definition, _isBackUp);
 
             string directoryPath = null;
             if (_definition.DirectoryScope == SaveScope.Global)
@@ -83,7 +90,6 @@ namespace AbstractPixel.Utility.Save
             directoryPath = Path.Combine(directoryPath, fileName);
             return directoryPath;
         }
-
 
         // 1. GLOBAL PATHS
         public static string GetGlobalPath()

@@ -5,7 +5,8 @@ namespace AbstractPixel.Utility
 {
     public  interface ISaveable
     {
-        public SaveCategory saveCategory { get; }
+        public string Guid { get; set; }
+        public SaveCategory saveCategory { get; set; }
         public object CaptureData();
         public void RestoreData(object deserialisedData); 
     }

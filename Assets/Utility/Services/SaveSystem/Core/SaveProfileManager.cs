@@ -149,8 +149,9 @@ namespace AbstractPixel.Utility.Save
             if (serializer.TrySerialize(manifest, out string manifestJson))
             {
                 string fileExtension = SavePathGenerator.PrimaryFileExtension;
-                string manifestPath = Path.Combine(profilePath, GameProfileManifest.ManifestFileName,fileExtension);
-                storageService.SaveFile(manifestPath, manifestJson);
+                string manifestPath = Path.Combine(profilePath, GameProfileManifest.ManifestFileName);
+                manifestPath =manifestPath+fileExtension;
+                storageService.SaveFile(manifestJson,manifestPath);
                 return manifest;
             }
             else

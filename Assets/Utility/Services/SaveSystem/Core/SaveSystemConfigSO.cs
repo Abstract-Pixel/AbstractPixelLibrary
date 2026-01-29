@@ -51,5 +51,12 @@ namespace AbstractPixel.Utility.Save
             return null;
         }
 
+        public IReadOnlyList<SaveCatgeoryDefinition> GetAllCategoryDefintions()
+        {
+            return categoryDefinitionList;
+        }
+
+        
+
     }
 }

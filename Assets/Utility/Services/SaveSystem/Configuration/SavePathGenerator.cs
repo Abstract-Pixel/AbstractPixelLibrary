@@ -74,23 +74,7 @@ namespace AbstractPixel.Utility.Save
         }
 
         #region Helper Methods
-        private static string GenerateFullPath(SaveCatgeoryDefinition _definition, bool _isBackUp, string _profileId = default)
-        {
-            string fileName = GetFileNameBasedOnCategoryDefinition(_definition, _isBackUp);
-
-            string directoryPath = null;
-            if (_definition.DirectoryScope == SaveScope.Global)
-            {
-                directoryPath = _isBackUp ? GetGlobalBackupPath() : GetGlobalPath();
-            }
-            else if (_definition.DirectoryScope == SaveScope.GameProfile)
-            {
-                directoryPath = _isBackUp ? GetProfileBackupPath(_profileId) : GetProfilePath(_profileId);
-            }
-            directoryPath = Path.Combine(directoryPath, fileName);
-            return directoryPath;
-        }
-
+      
         // 1. GLOBAL PATHS
         public static string GetGlobalPath()
         {
@@ -110,10 +94,28 @@ namespace AbstractPixel.Utility.Save
             // Returns: .../SaveFiles/GameSaves/Profiles/
             return Path.Combine(CurrentRootPath, GameSavesFolder, ProfileSavesRootFolder);
         }
-        private static string GetProfilePath(string _profileId)
+        public static string GetProfilePath(string _profileId)
         {
             // Returns: .../SaveFiles/GameSaves/Profiles/GameProfile+profileId/
             return Path.Combine(CurrentRootPath, GameSavesFolder, ProfileSavesRootFolder, GameProfileSavesFolder + _profileId);
+        }
+        #endregion
+
+        private static string GenerateFullPath(SaveCatgeoryDefinition _definition, bool _isBackUp, string _profileId = default)
+        {
+            string fileName = GetFileNameBasedOnCategoryDefinition(_definition, _isBackUp);
+
+            string directoryPath = null;
+            if (_definition.DirectoryScope == SaveScope.Global)
+            {
+                directoryPath = _isBackUp ? GetGlobalBackupPath() : GetGlobalPath();
+            }
+            else if (_definition.DirectoryScope == SaveScope.GameProfile)
+            {
+                directoryPath = _isBackUp ? GetProfileBackupPath(_profileId) : GetProfilePath(_profileId);
+            }
+            directoryPath = Path.Combine(directoryPath, fileName);
+            return directoryPath;
         }
 
         private static string GetProfileBackupPath(string _profileId)
@@ -121,6 +123,5 @@ namespace AbstractPixel.Utility.Save
             // Returns: .../SaveFiles/GameSaves/Profiles/GameProfile/Backups/
             return Path.Combine(GetProfilePath(_profileId), GameProfileBackupSavesFolder);
         }
-        #endregion
     }
 }

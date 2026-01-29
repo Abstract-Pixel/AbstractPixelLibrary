@@ -64,7 +64,7 @@ namespace AbstractPixel.Utility.Save
                 }
                 else
                 {
-                    categorizedSaveFileData = new SaveFileData(fileName,activeProfileId);
+                    categorizedSaveFileData = new SaveFileData(fileName, activeProfileId);
                 }
 
                 foreach (ISaveable saveable in group)
@@ -77,7 +77,7 @@ namespace AbstractPixel.Utility.Save
                     categorizedSaveFileData.DataMap.Add(saveable.Guid, capturedData);
                 }
 
-                if(serializer.TrySerialize(categorizedSaveFileData, out string  json))
+                if (serializer.TrySerialize(categorizedSaveFileData, out string json))
                 {
                     fileStorageService.SaveFile(json, fullSavePath);
 
@@ -87,7 +87,34 @@ namespace AbstractPixel.Utility.Save
 
         public void LoadALL()
         {
+            string profileId = profileManager.CurrentProfileID;
+            foreach (SaveCatgeoryDefinition defintion in saveConfig.GetAllCategoryDefintions())
+            {
+                string loadPath = SavePathGenerator.GetPath(defintion, profileId);
+                if (!fileStorageService.FileExists(loadPath)) continue;
 
+                string loadedjson = fileStorageService.LoadFile(loadPath);
+                if (!serializer.TryDeserialize(loadedjson, out SaveFileData loadedData))
+                {
+                    continue;
+                }
+
+                foreach (KeyValuePair<string, object> kvp in loadedData.DataMap)
+                {
+                    string guid = kvp.Key;
+                    object objectData = kvp.Value;
+
+                    if (SaveableObjectsRegistry.TryGetValue(guid, out ISaveable saveable))
+                    {
+                        saveable.RestoreData(objectData);
+                    }
+                    else
+                    {
+                        // LATER: Handle objects that don't exist yet         
+                    }
+
+                }
+            }
         }
 
         public void RegisterSaveableObject(string _uniqueId, ISaveable _saveable)

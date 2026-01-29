@@ -8,4 +8,5 @@
   <Project Path="AbstractPixel.Utility.Save.csproj" />
   <Project Path="NuGetForUnity.csproj" />
   <Project Path="CustomInspector.Demo.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
 </Solution>

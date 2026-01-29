@@ -12,7 +12,7 @@ public class fakeo : MonoBehaviour, ISaveable
     IEnumerator  Start()
     {
         yield return new WaitForSeconds(1f);
-        SaveManager.Instance.SaveALL();
+        SaveManager.Instance.LoadALL();
     }
 
     public object CaptureData()
@@ -23,10 +23,7 @@ public class fakeo : MonoBehaviour, ISaveable
 
     public void RestoreData(object deserialisedData)
     {
-        Vector3Data data = (Vector3Data)deserialisedData;
-        position = data;
-
-
-        
+        Vector3Data data = SaveDataConverter.Convert<Vector3Data>(deserialisedData);
+        position = data;  
     }
 }

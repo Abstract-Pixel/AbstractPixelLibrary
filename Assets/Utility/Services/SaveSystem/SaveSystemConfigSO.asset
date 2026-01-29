@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eef6100df71bb3f4fb3f307199f3c8db, type: 3}
   m_Name: SaveSystemConfigSO
   m_EditorClassIdentifier: AbstractPixel.Utility.Save::AbstractPixel.Utility.Save.SaveSystemConfigSO
-  <useDebugPath>k__BackingField: 0
+  <UseDebugPath>k__BackingField: 0
+  <GameProfileGuidLength>k__BackingField: 6
+  <PrimaryFileExtension>k__BackingField: 1
+  <BackupFileExtension>k__BackingField: 4
   categoryDefinitionList:
   - DisplayName: Input
     Category: 1
@@ -24,8 +27,13 @@ MonoBehaviour:
     DirectoryScope: 1
     CustomFileName: 
     encryptFile: 0
-  - DisplayName: Game
+  - DisplayName: Achievements
     Category: 3
-    DirectoryScope: 2
+    DirectoryScope: 1
     CustomFileName: Profile
+    encryptFile: 0
+  - DisplayName: Game
+    Category: 4
+    DirectoryScope: 2
+    CustomFileName: fakedData
     encryptFile: 0

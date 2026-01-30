@@ -3,11 +3,10 @@ using AbstractPixel.Utility.Save;
 using System.Collections;
 using UnityEngine;
 
+[Saveable(SaveCategory.Game,"Fakeo")]
 public class fakeo : MonoBehaviour, ISaveable<Vector3Data>
 {
     [SerializeField] Vector3 position;
-    public string Guid { get; set; }
-    public SaveCategory saveCategory { get; set; }
 
     IEnumerator  Start()
     {
@@ -23,7 +22,6 @@ public class fakeo : MonoBehaviour, ISaveable<Vector3Data>
 
     public void RestoreData(Vector3Data _loadedData)
     {
-        // Vector3Data data = SaveDataConverter.Convert<Vector3Data>(deserialisedData);
-        //position = data;  
+        position = _loadedData;  
     }
 }

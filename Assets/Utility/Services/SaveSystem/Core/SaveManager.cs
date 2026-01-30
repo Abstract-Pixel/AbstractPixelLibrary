@@ -70,8 +70,6 @@ namespace AbstractPixel.Utility.Save
                     ISaveableBridge bridge = BridgesDataMap[key];
                     if (bridge == null) continue;
 
-
-
                     object capturedData = bridge.CaptureState(category);
                     if (capturedData == null)
                     {
@@ -85,10 +83,8 @@ namespace AbstractPixel.Utility.Save
                     fileStorageService.SaveFile(json, fullSavePath);
 
                 }
-
-
-
             }
+        }
 
         public void LoadALL()
         {

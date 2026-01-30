@@ -6,6 +6,29 @@ namespace AbstractPixel.Utility.Save
 {
     public class JsonSerializer : ISerializer
     {
+        JsonSerializerSettings settings;
+
+        public JsonSerializer()
+        {
+            settings = new JsonSerializerSettings()
+            {
+                // READABILITY (Debug vs Release) LATER : have this as a option in config
+                Formatting = Formatting.Indented,
+
+                // SAFETY (Prevents Unity Crashes)
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+
+                // OPTIMIZATION (Disk Space)
+                NullValueHandling = NullValueHandling.Ignore,
+
+                // LIST LOGIC (Prevents Duplicate Items)
+                ObjectCreationHandling = ObjectCreationHandling.Replace,
+
+                // TYPE HANDLING (The "Bridge" Strategy)
+                // NONE because SaveDataConverter + SaveableBridge is used
+                TypeNameHandling = TypeNameHandling.None
+            };
+        }
         public bool TrySerialize<T>(T _data, out string _output)
         {
             if (_data == null)
@@ -23,7 +46,7 @@ namespace AbstractPixel.Utility.Save
 
             try
             {
-                _output = JsonConvert.SerializeObject(_data);
+                _output = JsonConvert.SerializeObject(_data,settings);
                 return true;
 
             }
@@ -45,7 +68,7 @@ namespace AbstractPixel.Utility.Save
             }
             try
             {
-                _output = JsonConvert.DeserializeObject<T>(_data);
+                _output = JsonConvert.DeserializeObject<T>(_data,settings);
                 return true;
             }
             catch (Exception e)

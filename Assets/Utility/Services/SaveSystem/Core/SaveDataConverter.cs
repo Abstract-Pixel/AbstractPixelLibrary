@@ -27,5 +27,10 @@ namespace AbstractPixel.Utility.Save
             }
            
         }
+
+        public static T Convert<T>(object data)
+        {
+            return (T)Convert(data, typeof(T));
+        }
     }
 }

@@ -3,7 +3,7 @@ using AbstractPixel.Utility.Save;
 using System.Collections;
 using UnityEngine;
 
-public class fakeo : MonoBehaviour, ISaveable
+public class fakeo : MonoBehaviour, ISaveable<Vector3Data>
 {
     [SerializeField] Vector3 position;
     public string Guid { get; set; }
@@ -15,15 +15,15 @@ public class fakeo : MonoBehaviour, ISaveable
         SaveManager.Instance.LoadALL();
     }
 
-    public object CaptureData()
+    public Vector3Data CaptureData()
     {
         Vector3Data data = position;
         return data;
     }
 
-    public void RestoreData(object deserialisedData)
+    public void RestoreData(Vector3Data _loadedData)
     {
-        Vector3Data data = SaveDataConverter.Convert<Vector3Data>(deserialisedData);
-        position = data;  
+        // Vector3Data data = SaveDataConverter.Convert<Vector3Data>(deserialisedData);
+        //position = data;  
     }
 }

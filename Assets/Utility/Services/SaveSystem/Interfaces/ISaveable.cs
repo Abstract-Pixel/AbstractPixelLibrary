@@ -3,11 +3,9 @@ using UnityEngine;
 
 namespace AbstractPixel.Utility
 {
-    public  interface ISaveable
+    public  interface ISaveable<T>
     {
-        public string Guid { get; set; }
-        public SaveCategory saveCategory { get; set; }
-        public object CaptureData();
-        public void RestoreData(object deserialisedData); 
+        public T CaptureData();
+        public void RestoreData(T _loadedData); 
     }
 }

@@ -8,7 +8,7 @@ namespace AbstractPixel.Utility.Save
     {
         [SerializeField] private SaveSystemConfigSO saveConfig;
         private SaveProfileManager profileManager;
-        private Dictionary<string, ISaveable> SaveableObjectsRegistry;
+        private Dictionary<SaveCategory, Dictionary<string, ISaveableBridge>> SaveableObjectsRegistry;
         private IDataStorageService fileStorageService;
         private ISerializer serializer;
 
@@ -24,7 +24,7 @@ namespace AbstractPixel.Utility.Save
             fileStorageService = new FileDataStorageService();
             serializer = new JsonSerializer();
 
-            SaveableObjectsRegistry = new Dictionary<string, ISaveable>();
+            SaveableObjectsRegistry = new Dictionary<SaveCategory, Dictionary<string, ISaveableBridge>>();
             profileManager = new SaveProfileManager(fileStorageService, saveConfig, serializer);
 
             // For Testing purposes, replace and remove with actual profile loading and managment
@@ -44,14 +44,12 @@ namespace AbstractPixel.Utility.Save
 
         public void SaveALL()
         {
-            Dictionary<string, ISaveable>.ValueCollection allSaveables = SaveableObjectsRegistry.Values;
-            IEnumerable<IGrouping<SaveCategory, ISaveable>> groupedSaveables = allSaveables.GroupBy(saveable => saveable.saveCategory);
             string fileExtension = SavePathGenerator.PrimaryFileExtension;
             string activeProfileId = profileManager.CurrentProfileID;
-            foreach (IGrouping<SaveCategory, ISaveable> group in groupedSaveables)
+
+            foreach (SaveCategory category in SaveableObjectsRegistry.Keys)
             {
-                SaveCategory category = group.Key;
-                string profileId = profileManager.CurrentProfileID;
+                Dictionary<string, ISaveableBridge> BridgesDataMap = SaveableObjectsRegistry[category];
                 SaveCatgeoryDefinition categoryDefinition = saveConfig.GetCategoryDefinition(category);
 
                 SaveFileData categorizedSaveFileData;
@@ -67,14 +65,19 @@ namespace AbstractPixel.Utility.Save
                     categorizedSaveFileData = new SaveFileData(fileName, activeProfileId);
                 }
 
-                foreach (ISaveable saveable in group)
+                foreach (string key in BridgesDataMap.Keys)
                 {
-                    object capturedData = saveable.CaptureData();
+                    ISaveableBridge bridge = BridgesDataMap[key];
+                    if (bridge == null) continue;
+
+
+
+                    object capturedData = bridge.CaptureState(category);
                     if (capturedData == null)
                     {
                         continue;
                     }
-                    categorizedSaveFileData.DataMap.Add(saveable.Guid, capturedData);
+                    categorizedSaveFileData.DataMap.Add(bridge.UniqueId, capturedData);
                 }
 
                 if (serializer.TrySerialize(categorizedSaveFileData, out string json))
@@ -82,8 +85,10 @@ namespace AbstractPixel.Utility.Save
                     fileStorageService.SaveFile(json, fullSavePath);
 
                 }
+
+
+
             }
-        }
 
         public void LoadALL()
         {
@@ -94,8 +99,17 @@ namespace AbstractPixel.Utility.Save
                 if (!fileStorageService.FileExists(loadPath)) continue;
 
                 string loadedjson = fileStorageService.LoadFile(loadPath);
+                if (string.IsNullOrEmpty(loadedjson)) continue;
                 if (!serializer.TryDeserialize(loadedjson, out SaveFileData loadedData))
                 {
+                    Debug.LogError($"Failed to deserialize file at {loadPath}");
+                    continue;
+                }
+          
+
+                if (!SaveableObjectsRegistry.TryGetValue(defintion.Category, out Dictionary<string, ISaveableBridge> bridgesDataMap))
+                {
+                    // No Live Objects registered Under This Category
                     continue;
                 }
 
@@ -104,34 +118,61 @@ namespace AbstractPixel.Utility.Save
                     string guid = kvp.Key;
                     object objectData = kvp.Value;
 
-                    if (SaveableObjectsRegistry.TryGetValue(guid, out ISaveable saveable))
+                    if(bridgesDataMap.TryGetValue(guid,out ISaveableBridge bridge))
                     {
-                        saveable.RestoreData(objectData);
-                    }
+                        bridge.RestoreState(objectData,defintion.Category);
+                    }   
                     else
                     {
-                        // LATER: Handle objects that don't exist yet         
+                        // LATER: This is where you spawn objects that don't exist yet
                     }
-
                 }
             }
         }
 
-        public void RegisterSaveableObject(string _uniqueId, ISaveable _saveable)
+
+        public void RegisterSaveableObject(ISaveableBridge bridge, List<SaveCategory> categories)
         {
             if (IsInstanceNull()) return;
-            if (!SaveableObjectsRegistry.ContainsKey(_uniqueId))
+            if (bridge == null || categories == null) return;
+
+            foreach (SaveCategory category in categories)
             {
-                SaveableObjectsRegistry.Add(_uniqueId, _saveable);
+                // 1. Ensure the Bucket (Inner Dictionary) exists for this Category
+                if (!SaveableObjectsRegistry.ContainsKey(category))
+                {
+                    SaveableObjectsRegistry.Add(category, new Dictionary<string, ISaveableBridge>());
+                }
+
+                Dictionary<string, ISaveableBridge> categoryBucket = SaveableObjectsRegistry[category];
+
+                // 3. APPEND the Bridge (Safe Check)
+                if (!categoryBucket.ContainsKey(bridge.UniqueId))
+                {
+                    categoryBucket.Add(bridge.UniqueId, bridge);
+                }
+                else
+                {
+                    // Optional: Update the reference if it somehow got recreated
+                    categoryBucket[bridge.UniqueId] = bridge;
+                }
             }
         }
 
-        public void UnregisterSaveableObject(string _uniqueId)
+        public void UnregisterSaveableObject(ISaveableBridge bridge, List<SaveCategory> categories)
         {
             if (IsInstanceNull()) return;
-            if (SaveableObjectsRegistry.ContainsKey(_uniqueId))
+            if (bridge == null || categories == null) return;
+
+            foreach (SaveCategory category in categories)
             {
-                SaveableObjectsRegistry.Remove(_uniqueId);
+                if (SaveableObjectsRegistry.TryGetValue(category, out var categoryBucket))
+                {
+                    if (categoryBucket.ContainsKey(bridge.UniqueId))
+                    {
+                        categoryBucket.Remove(bridge.UniqueId);
+                    }
+                }
             }
         }
 

@@ -26,13 +26,13 @@ namespace AbstractPixel.Utility.Save
 
         }
 
-        private static void OnPlayModeStateChanged(PlayModeStateChange state)
+        private static void OnPlayModeStateChanged(PlayModeStateChange _state)
         {
-            if (state != PlayModeStateChange.ExitingEditMode) return;
+            if (_state != PlayModeStateChange.ExitingEditMode) return;
 
-            ValidateCodebase(out bool _errorFound);
+            ValidateCodebase(out bool errorFound);
 
-            if (_errorFound)
+            if (errorFound)
             {
                 EditorApplication.isPlaying = false;
                 EditorUtility.DisplayDialog("Save System Integrity Error",
@@ -63,8 +63,10 @@ namespace AbstractPixel.Utility.Save
                     if ((!hasSaveInterface))
                     {
                         errorFound = true;
-                        Debug.LogError($"<color=red>[SaveSystem Critical]</color> The script <b>'{type.Name}'</b> has the <b>[Saveable]</b> attribute but DOES NOT implement <b>ISaveable<></b> Interface.\n" +
-                               $"You must implement the interface to ensure data Capture/Restore works.");
+                        UnityEngine.Object scriptAsset = GetScriptAssetFromType(type);
+                        string scriptLink = GetHyperlink(scriptAsset, type.Name);
+                        Debug.LogError($"<color=red>[SaveSystem Critical]</color> The script {scriptLink} has the <b>[Saveable]</b> attribute but DOES NOT implement <b>ISaveable<></b> Interface.\n" +
+                               $"You must implement the interface to ensure data Capture/Restore works.",scriptAsset);
 
                     }
                 }
@@ -72,17 +74,45 @@ namespace AbstractPixel.Utility.Save
                 {
                     if (hasSaveInterface)
                     {
-                        Debug.LogError($"<color=red>[SaveSystem Critical]</color> The script <b>'{type.Name}'</b> implements <b>ISaveable<></b> Interface but is missing the <b>[Saveable(Category)]</b> attribute.\n" +
-                           $"The Save System will ignore this script without the attribute.");
                         errorFound = true;
+                        UnityEngine.Object scriptAsset = GetScriptAssetFromType(type);
+                        string link = GetHyperlink(scriptAsset, type.Name);
+                        Debug.LogError($"<color=red>[SaveSystem Critical]</color> The script {link} implements <b>ISaveable<></b> Interface but is missing the <b>[Saveable(Category)]</b> attribute.\n" +
+                           $"The Save System will ignore this script without the attribute.",scriptAsset);
                     }
                 }
             }
+        }
+        private static string GetHyperlink(UnityEngine.Object asset, string fallbackName)
+        {
+            if (asset == null) return $"<b>'{fallbackName}'</b>";
+
+            string path = AssetDatabase.GetAssetPath(asset);
+            string guid = AssetDatabase.AssetPathToGUID(path);
+
+            // This syntax creates a clickable link in Unity Console
+            return $"<a href=\"asset:{guid}\"><b>'{fallbackName}'</b></a>";
         }
 
         private static bool ImplementsGenericInterface(Type _type, Type _genericInterface)
         {
             return _type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == _genericInterface);
+        }
+
+        private static UnityEngine.Object GetScriptAssetFromType(Type _type)
+        {
+            string[] guids = AssetDatabase.FindAssets($"t:MonoScript {_type.Name}");
+            foreach (string guid in guids)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                MonoScript script = AssetDatabase.LoadAssetAtPath<MonoScript>(path);
+                if (script != null && script.GetClass() == _type)
+                {
+                    return script;
+                }
+               
+            }
+            return null;
         }
 
     }

@@ -15,7 +15,7 @@ namespace AbstractPixel.Utility
             debuggableScriptsDictionary = new Dictionary<string, ScriptDebugInfo>();
             if(dataBase.debuggableScriptsList.Count == 0)
             {
-                Debug.LogWarning("DebugDataBase contains no debuggable scripts. Please add scripts to the database to enable logging.");
+                //Debug.LogWarning("DebugDataBase contains no debuggable scripts. Please add scripts to the database to enable logging.");
                 return;
             }
             foreach (ScriptDebugInfo debugInfo in dataBase.debuggableScriptsList)

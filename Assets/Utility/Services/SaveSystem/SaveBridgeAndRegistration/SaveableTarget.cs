@@ -7,6 +7,7 @@ namespace AbstractPixel.Utility.Save
     [Serializable]
     public class SaveableTarget
     {
+        [HideInInspector][SerializeField]private string ClassName;
         public MonoBehaviour Script;
         public SaveableIdentification Identification;
 
@@ -19,6 +20,7 @@ namespace AbstractPixel.Utility.Save
         {
             Script = _script;
             Identification = _identification;
+            ClassName = _identification.ClassName;
         }
 
     }

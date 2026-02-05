@@ -11,6 +11,8 @@ namespace AbstractPixel.Utility.Save
         private IDataStorageService fileStorageService;
         private ISerializer serializer;
 
+        readonly string stringSepratorIdentifier = "#";
+
         // Remove Later
         string tempProfileID = "TEST_101";
 
@@ -122,10 +124,13 @@ namespace AbstractPixel.Utility.Save
 
             foreach (KeyValuePair<string, object> kvp in loadedData.DataMap)
             {
-                string guid = kvp.Key;
+                string compositeKey = kvp.Key;
                 object objectData = kvp.Value;
 
-                if (bridgesDataMap.TryGetValue(guid, out ISaveableBridge bridge))
+                int separatorIndex = compositeKey.LastIndexOf(stringSepratorIdentifier) +1;
+                string extractedGUID = compositeKey.Substring(separatorIndex);
+
+                if (bridgesDataMap.TryGetValue(extractedGUID, out ISaveableBridge bridge))
                 {
                     bridge.RestoreState(objectData, _category);
                 }
@@ -137,6 +142,11 @@ namespace AbstractPixel.Utility.Save
             if (IsInstanceNull()) return;
             if (bridge == null || categories == null) return;
 
+            // Extract GUID from the Bridge's Composite UniqueID "Name#GUID"
+            // If no separator, assume ID is the GUID (Legacy support)
+            int separatorIndex = bridge.UniqueId.LastIndexOf(stringSepratorIdentifier) + 1;
+            string extractedGuid = separatorIndex > 0 ? bridge.UniqueId.Substring(separatorIndex) : bridge.UniqueId;
+
             foreach (SaveCategory category in categories)
             {
                 // 1. Ensure the Bucket (Inner Dictionary) exists for this Category
@@ -147,15 +157,15 @@ namespace AbstractPixel.Utility.Save
 
                 Dictionary<string, ISaveableBridge> categoryBucket = SaveableObjectsRegistry[category];
 
-                // 3. APPEND the Bridge (Safe Check)
-                if (!categoryBucket.ContainsKey(bridge.UniqueId))
+                // 3. APPEND the Bridge using EXTRACTED GUID as key
+                if (!categoryBucket.ContainsKey(extractedGuid))
                 {
-                    categoryBucket.Add(bridge.UniqueId, bridge);
+                    categoryBucket.Add(extractedGuid, bridge);
                 }
                 else
                 {
                     // Optional: Update the reference if it somehow got recreated
-                    categoryBucket[bridge.UniqueId] = bridge;
+                    categoryBucket[extractedGuid] = bridge;
                 }
             }
         }
@@ -165,13 +175,16 @@ namespace AbstractPixel.Utility.Save
             if (IsInstanceNull()) return;
             if (bridge == null || categories == null) return;
 
+            int separatorIndex = bridge.UniqueId.LastIndexOf(stringSepratorIdentifier) + 1;
+            string extractedGuid = separatorIndex > 0 ? bridge.UniqueId.Substring(separatorIndex) : bridge.UniqueId;
+
             foreach (SaveCategory category in categories)
             {
                 if (SaveableObjectsRegistry.TryGetValue(category, out var categoryBucket))
                 {
-                    if (categoryBucket.ContainsKey(bridge.UniqueId))
+                    if (categoryBucket.ContainsKey(extractedGuid))
                     {
-                        categoryBucket.Remove(bridge.UniqueId);
+                        categoryBucket.Remove(extractedGuid);
                     }
                 }
             }

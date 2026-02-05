@@ -4,7 +4,7 @@ using System.Collections;
 using UnityEngine;
 
 [Saveable(SaveCategory.Game)]
-public class aio : MonoBehaviour, ISaveable<Vector3Data>
+public class LameoSon : MonoBehaviour, ISaveable<Vector3Data>
 {
     [SerializeField] Vector3 position;
 

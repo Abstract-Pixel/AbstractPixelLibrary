@@ -349,7 +349,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b244b564cac8d804d8567f708d892ea1, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::anotherFako
+  m_EditorClassIdentifier: Assembly-CSharp::FakeoNice
   example:
     bestTime: 0
     leaderboardCount: 0
@@ -366,17 +366,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da8848201ba4a9947ae8a09b00a2df07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: AbstractPixel.Utility.Save::AbstractPixel.Utility.SaveableBridge
-  <UniqueId>k__BackingField: 'MostFake GameObject [cba6aa15]'
+  <UniqueId>k__BackingField: 'MostFake GameObject #[e4f9f15f-fa14-4d8f-9f32-ad80ffb49e2e]'
   saveableTargets:
-  - Script: {fileID: 840363637}
+  - InpsectorName: FakeoBest
+    Script: {fileID: 840363637}
     Identification:
-      ClassName: anotherFako
-      GUID: b5e79ee4-520c-4127-9724-bb4d50c97621
-  - Script: {fileID: 840363635}
+      ClassName: FakeoBest
+      GUID: e0153a9a-dbe2-49a5-a4b3-6e60617d0cab
+  - InpsectorName: LameoSon
+    Script: {fileID: 840363635}
     Identification:
-      ClassName: fakeo
-      GUID: a873ce0b-220d-49c2-8c33-7f6fe1295358
-  foundCategoriesList: 
+      ClassName: LameoSon
+      GUID: 156bed1a-c289-4115-9390-1ca94899ec75
 --- !u!1 &1814946179
 GameObject:
   m_ObjectHideFlags: 0
@@ -452,17 +453,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da8848201ba4a9947ae8a09b00a2df07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: AbstractPixel.Utility.Save::AbstractPixel.Utility.SaveableBridge
-  <UniqueId>k__BackingField: 'MostFake (1) GameObject [9936fd28]'
+  <UniqueId>k__BackingField: 'MostFake (1) GameObject #[6bd27dad-9518-4bd0-9b1e-95fe4e05fa7e]'
   saveableTargets:
-  - Script: {fileID: 1814946181}
+  - InpsectorName: FakeoBest
+    Script: {fileID: 1814946181}
     Identification:
-      ClassName: anotherFako
-      GUID: f8716fb3-1ff1-4e9d-80d6-022cdff1f51f
-  - Script: {fileID: 1814946180}
+      ClassName: FakeoBest
+      GUID: 925a7fb5-a448-4fc2-9278-3d999658eec2
+  - InpsectorName: LameoSon
+    Script: {fileID: 1814946180}
     Identification:
-      ClassName: fakeo
-      GUID: b99f60c6-d74f-494d-9bbb-0e2c0adec368
-  foundCategoriesList: 
+      ClassName: LameoSon
+      GUID: bea45379-9961-4477-9ece-299589b7b7e5
 --- !u!1 &1908389119
 GameObject:
   m_ObjectHideFlags: 0
@@ -606,6 +608,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 1908389123}
   - {fileID: 787691798}
-  - {fileID: 840363636}
   - {fileID: 1814946182}
+  - {fileID: 840363636}
   - {fileID: 624018901}

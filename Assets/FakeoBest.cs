@@ -20,7 +20,7 @@ public class leaderboardData
 }
 
 [Saveable(SaveCategory.Game)]
-public class FakeoNice : MonoBehaviour, ISaveable<leaderboardData>
+public class FakeoBest : MonoBehaviour, ISaveable<leaderboardData>
 {
     [SerializeField] leaderboardData example;
 

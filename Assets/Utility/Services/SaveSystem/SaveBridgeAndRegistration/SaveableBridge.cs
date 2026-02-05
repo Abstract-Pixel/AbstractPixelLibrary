@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -9,12 +10,12 @@ namespace AbstractPixel.Utility.Save
     public class SaveableBridge : MonoBehaviour, ISaveableBridge
     {
         [field: SerializeField] public string UniqueId { get; private set; }
-        
+
         [SerializeField] private List<SaveableTarget> saveableTargets = new List<SaveableTarget>();
-        [SerializeField] private List<SaveCategory> foundCategoriesList = new List<SaveCategory>();
+        private List<SaveCategory> foundCategoriesList = new List<SaveCategory>();
 
         private Dictionary<SaveCategory, List<SaveableTarget>> saveableTargetsRegistry;
-        
+
         readonly string isaveableCaptureMethod = "CaptureData";
         readonly string isaveableRestoreMethod = "RestoreData";
         readonly string stringSepratorIdentifier = "#";
@@ -65,6 +66,7 @@ namespace AbstractPixel.Utility.Save
                     if (existingTarget.Identification != null)
                     {
                         existingTarget.Identification.ClassName = script.GetType().Name;
+                        existingTarget.InpsectorName = script.GetType().Name;
                     }
                 }
                 else
@@ -88,7 +90,7 @@ namespace AbstractPixel.Utility.Save
                 Type componentType = target.Script.GetType();
                 SaveableAttribute attribute = componentType.GetCustomAttribute<SaveableAttribute>();
                 if (attribute == null) continue;
-                
+
                 Type interfaceType = componentType.GetInterface(typeof(ISaveable<>).Name);
                 if (interfaceType == null) continue;
 
@@ -159,17 +161,17 @@ namespace AbstractPixel.Utility.Save
             foreach (KeyValuePair<string, object> kvp in combinedCapturedDataMap)
             {
                 string compositeKey = kvp.Key;
-                
+
                 // Extract GUID from "ClassName#GUID"
                 // We split by the LAST '#' to ensure we get the GUID at the end.
                 int separatorIndex = compositeKey.LastIndexOf(stringSepratorIdentifier) + 1;
-                
+
                 string extractedGuid = (separatorIndex != -1) ? compositeKey.Substring(separatorIndex) : compositeKey;
 
                 if (guidToTargetMap.TryGetValue(extractedGuid, out SaveableTarget target))
                 {
-                     object typedData = SaveDataConverter.Convert(kvp.Value, target.DataToSaveType);
-                     target.RestoreDataMethod.Invoke(target.Script, new object[] { typedData });
+                    object typedData = SaveDataConverter.Convert(kvp.Value, target.DataToSaveType);
+                    target.RestoreDataMethod.Invoke(target.Script, new object[] { typedData });
                 }
             }
         }

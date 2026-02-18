@@ -164,15 +164,150 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TestManager
   broTest:
-    rid: 4231831505204150339
+    rid: 4231831505204150347
   references:
     version: 2
     RefIds:
-    - rid: 4231831505204150339
-      type: {class: AdvancedTest, ns: , asm: Assembly-CSharp}
-      data: 
+    - rid: 4231831505204150347
+      type: {class: BasicTest, ns: , asm: Assembly-CSharp}
+      data:
+        magic: 0
+--- !u!1 &362503060
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 362503063}
+  - component: {fileID: 362503062}
+  - component: {fileID: 362503061}
+  - component: {fileID: 362503064}
+  m_Layer: 0
+  m_Name: broski
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &362503061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 362503060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 012f7127e9b420c458e6eaaccde6e377, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LameoSon
+  position: {x: 60, y: 60, z: 60}
+--- !u!114 &362503062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 362503060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b244b564cac8d804d8567f708d892ea1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FakeoBest
+  example:
+    bestTime: 100
+    leaderboardCount: 100
+    leaderboardIndex: 100
+--- !u!4 &362503063
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 362503060}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -8.06065, y: -0, z: 48.6223}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &362503064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 362503060}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da8848201ba4a9947ae8a09b00a2df07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: AbstractPixel.Utility.Save::AbstractPixel.Utility.Save.SaveableBridge
+  <UniqueId>k__BackingField: 'GameObject GameObject #[dadd5176-bbeb-43e0-8101-e343715a893a]'
+  saveableTargets:
+  - InpsectorName: FakeoBest
+    Script: {fileID: 362503062}
+    Identification:
+      ClassName: FakeoBest
+      GUID: 79fafddc-6a17-498f-90db-38dc9d0133f9
+  - InpsectorName: LameoSon
+    Script: {fileID: 362503061}
+    Identification:
+      ClassName: LameoSon
+      GUID: 82b02254-f22d-45c3-953d-126e349f44de
+--- !u!1 &1342621201
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1342621203}
+  - component: {fileID: 1342621202}
+  m_Layer: 0
+  m_Name: GameObject (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1342621202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1342621201}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a3ba1646fd05bf4dbe260947b5f8eac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: AbstractPixel.Utility.Save::AbstractPixel.Utility.Save.SaveManager
+  saveConfig: {fileID: 11400000, guid: 79c67943837e9df43a6d5974e87d3bd7, type: 2}
+--- !u!4 &1342621203
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1342621201}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -8.06065, y: -0, z: 48.6223}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 15130104}
+  - {fileID: 362503063}
+  - {fileID: 1342621203}

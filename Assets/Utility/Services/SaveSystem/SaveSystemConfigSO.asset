@@ -20,20 +20,25 @@ MonoBehaviour:
   - DisplayName: Input
     Category: 1
     DirectoryScope: 1
-    CustomFileName: 
+    CustomFileName: Input
     encryptFile: 0
   - DisplayName: Settings
     Category: 2
     DirectoryScope: 1
     CustomFileName: 
     encryptFile: 0
-  - DisplayName: Achievements
-    Category: 3
-    DirectoryScope: 1
+  - DisplayName: Game
+    Category: 5
+    DirectoryScope: 2
     CustomFileName: Profile
     encryptFile: 0
-  - DisplayName: Game
+  - DisplayName: Achievements
     Category: 4
     DirectoryScope: 2
     CustomFileName: fakedData
+    encryptFile: 0
+  - DisplayName: Position
+    Category: 3
+    DirectoryScope: 2
+    CustomFileName: Posit
     encryptFile: 0

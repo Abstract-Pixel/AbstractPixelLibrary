@@ -3,7 +3,7 @@ using AbstractPixel.Utility.Save;
 using System.Collections;
 using UnityEngine;
 
-[Saveable(SaveCategory.Game)]
+[Saveable(SaveCategory.Input)]
 public class LameoSon : MonoBehaviour, ISaveable<Vector3Data>
 {
     [SerializeField] Vector3 position;

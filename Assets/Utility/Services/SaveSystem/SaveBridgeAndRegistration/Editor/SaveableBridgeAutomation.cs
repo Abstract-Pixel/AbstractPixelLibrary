@@ -49,7 +49,7 @@ namespace AbstractPixel.Utility.Save
                 {
                     continue;
                 }
-                if (script.TryGetComponent(out ISaveableBridge bridge))
+                if (script.TryGetComponent(out ISavableBridge bridge))
                 {
                     // It already contains a SaveableBridge
                     continue;

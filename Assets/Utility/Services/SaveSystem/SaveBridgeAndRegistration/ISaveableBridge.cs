@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace AbstractPixel.Utility.Save
 {
-    public interface  ISaveableBridge
+    public interface  ISavableBridge
     {
         public string UniqueId{  get; }
 

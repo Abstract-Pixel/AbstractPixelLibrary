@@ -1,17 +1,18 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace AbstractPixel.Utility.Save
 {
-    public class SaveManager : MonoSingleton<SaveManager>
+    public class SaveManager : PersistentSingleton<SaveManager>
     {
         [SerializeField] private SaveSystemConfigSO saveConfig;
         private SaveProfileManager profileManager;
-        private Dictionary<SaveCategory, Dictionary<string, ISaveableBridge>> SaveableObjectsRegistry;
+        private Dictionary<SaveCategory, Dictionary<string, ISavableBridge>> savableObjectsRegistry;
         private IDataStorageService fileStorageService;
         private ISerializer serializer;
 
-        readonly string stringSepratorIdentifier = "#";
+        readonly string stringSeparatorIdentifier = "#";
 
         // Remove Later
         string tempProfileID = "TEST_101";
@@ -25,17 +26,19 @@ namespace AbstractPixel.Utility.Save
             fileStorageService = new FileDataStorageService();
             serializer = new JsonSerializer();
 
-            SaveableObjectsRegistry = new Dictionary<SaveCategory, Dictionary<string, ISaveableBridge>>();
+            savableObjectsRegistry = new Dictionary<SaveCategory, Dictionary<string, ISavableBridge>>();
             profileManager = new SaveProfileManager(fileStorageService, saveConfig, serializer);
 
             // For Testing purposes, replace and remove with actual profile loading and managment
             string profilePath = profileManager.CreateCustomProfileDirectory(tempProfileID);
             profileManager.SetCurrentActiveProfile(tempProfileID, profilePath);
+
+            LoadAllDataByScope(SaveScope.Global);
         }
 
         public void SaveALL()
         {
-            foreach (SaveCategory category in SaveableObjectsRegistry.Keys)
+            foreach (SaveCategory category in savableObjectsRegistry.Keys)
             {
                 SaveDataOf(category);
             }
@@ -43,7 +46,7 @@ namespace AbstractPixel.Utility.Save
 
         public void SaveDataOf(SaveCategory _category)
         {
-            if (!SaveableObjectsRegistry.TryGetValue(_category, out var bridgesDataMap))
+            if (!savableObjectsRegistry.TryGetValue(_category, out var bridgesDataMap))
             {
                 // No objects registered for this category. Nothing to save.
                 return;
@@ -67,7 +70,7 @@ namespace AbstractPixel.Utility.Save
             }
 
             bool hasData = false;
-            foreach (ISaveableBridge bridge in bridgesDataMap.Values)
+            foreach (ISavableBridge bridge in bridgesDataMap.Values)
             {
                 if (bridge == null) continue;
 
@@ -97,6 +100,15 @@ namespace AbstractPixel.Utility.Save
             }
         }
 
+        public void LoadAllDataByScope(SaveScope _directoryScope)
+        {
+            foreach (SaveCatgeoryDefinition definition in saveConfig.GetAllCategoryDefintions())
+            {
+                if (_directoryScope != definition.DirectoryScope) continue;
+                LoadDataOf(definition.Category);
+            }
+        }
+
         public void LoadDataOf(SaveCategory _category)
         {
             string profileId = profileManager.CurrentProfileID;
@@ -115,7 +127,7 @@ namespace AbstractPixel.Utility.Save
             }
 
             // Check if we have receivers (Bridges)
-            if (!SaveableObjectsRegistry.TryGetValue(_category, out Dictionary<string, ISaveableBridge> bridgesDataMap))
+            if (!savableObjectsRegistry.TryGetValue(_category, out Dictionary<string, ISavableBridge> bridgesDataMap))
             {
                 // LOGIC DECISION:
                 // This is where "Spawning Logic" would go later.
@@ -127,35 +139,35 @@ namespace AbstractPixel.Utility.Save
                 string compositeKey = kvp.Key;
                 object objectData = kvp.Value;
 
-                int separatorIndex = compositeKey.LastIndexOf(stringSepratorIdentifier) +1;
+                int separatorIndex = compositeKey.LastIndexOf(stringSeparatorIdentifier) + 1;
                 string extractedGUID = compositeKey.Substring(separatorIndex);
 
-                if (bridgesDataMap.TryGetValue(extractedGUID, out ISaveableBridge bridge))
+                if (bridgesDataMap.TryGetValue(extractedGUID, out ISavableBridge bridge))
                 {
                     bridge.RestoreState(objectData, _category);
                 }
             }
         }
 
-        public void RegisterSaveableObject(ISaveableBridge bridge, List<SaveCategory> categories)
+        public void RegisterSavableObject(ISavableBridge bridge, List<SaveCategory> categories)
         {
             if (IsInstanceNull()) return;
             if (bridge == null || categories == null) return;
 
             // Extract GUID from the Bridge's Composite UniqueID "Name#GUID"
             // If no separator, assume ID is the GUID (Legacy support)
-            int separatorIndex = bridge.UniqueId.LastIndexOf(stringSepratorIdentifier) + 1;
+            int separatorIndex = bridge.UniqueId.LastIndexOf(stringSeparatorIdentifier) + 1;
             string extractedGuid = separatorIndex > 0 ? bridge.UniqueId.Substring(separatorIndex) : bridge.UniqueId;
 
             foreach (SaveCategory category in categories)
             {
                 // 1. Ensure the Bucket (Inner Dictionary) exists for this Category
-                if (!SaveableObjectsRegistry.ContainsKey(category))
+                if (!savableObjectsRegistry.ContainsKey(category))
                 {
-                    SaveableObjectsRegistry.Add(category, new Dictionary<string, ISaveableBridge>());
+                    savableObjectsRegistry.Add(category, new Dictionary<string, ISavableBridge>());
                 }
 
-                Dictionary<string, ISaveableBridge> categoryBucket = SaveableObjectsRegistry[category];
+                Dictionary<string, ISavableBridge> categoryBucket = savableObjectsRegistry[category];
 
                 // 3. APPEND the Bridge using EXTRACTED GUID as key
                 if (!categoryBucket.ContainsKey(extractedGuid))
@@ -170,17 +182,17 @@ namespace AbstractPixel.Utility.Save
             }
         }
 
-        public void UnregisterSaveableObject(ISaveableBridge bridge, List<SaveCategory> categories)
+        public void UnregisterSavableObject(ISavableBridge bridge, List<SaveCategory> categories)
         {
             if (IsInstanceNull()) return;
             if (bridge == null || categories == null) return;
 
-            int separatorIndex = bridge.UniqueId.LastIndexOf(stringSepratorIdentifier) + 1;
+            int separatorIndex = bridge.UniqueId.LastIndexOf(stringSeparatorIdentifier) + 1;
             string extractedGuid = separatorIndex > 0 ? bridge.UniqueId.Substring(separatorIndex) : bridge.UniqueId;
 
             foreach (SaveCategory category in categories)
             {
-                if (SaveableObjectsRegistry.TryGetValue(category, out var categoryBucket))
+                if (savableObjectsRegistry.TryGetValue(category, out var categoryBucket))
                 {
                     if (categoryBucket.ContainsKey(extractedGuid))
                     {
@@ -200,5 +212,19 @@ namespace AbstractPixel.Utility.Save
             return false;
         }
 
+        private void OnEnable()
+        {
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+
+        private void OnDisable()
+        {
+            
+        }
+
+        void OnSceneLoaded(Scene scene,LoadSceneMode loadSceneMode)
+        {
+
+        }
     }
 }

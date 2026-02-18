@@ -112,7 +112,7 @@ namespace AbstractPixel.Utility
             }
 
             Rect bodyRect = new Rect(position.x, position.y + EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing, position.width
-                                 , position.height - EditorGUIUtility.singleLineHeight);
+                                    , position.height - EditorGUIUtility.singleLineHeight);
             string helpBoxMessage = "[Unassigned Polymorphic Type]: Please select a Type from the dropdown Above";
             if (isNull)
             {

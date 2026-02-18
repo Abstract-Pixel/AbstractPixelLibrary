@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace AbstractPixel.Utility.Save
 {
-    public class SaveableBridge : MonoBehaviour, ISaveableBridge
+    public class SaveableBridge : MonoBehaviour, ISavableBridge
     {
         [field: SerializeField] public string UniqueId { get; private set; }
 
@@ -180,7 +180,7 @@ namespace AbstractPixel.Utility.Save
         {
             if (foundCategoriesList.Count > 0)
             {
-                SaveManager.Instance.RegisterSaveableObject(this, foundCategoriesList);
+                SaveManager.Instance.RegisterSavableObject(this, foundCategoriesList);
             }
         }
 
@@ -188,7 +188,7 @@ namespace AbstractPixel.Utility.Save
         {
             if (SaveManager.Instance != null && foundCategoriesList.Count > 0)
             {
-                SaveManager.Instance.UnregisterSaveableObject(this, foundCategoriesList);
+                SaveManager.Instance.UnregisterSavableObject(this, foundCategoriesList);
             }
         }
     }

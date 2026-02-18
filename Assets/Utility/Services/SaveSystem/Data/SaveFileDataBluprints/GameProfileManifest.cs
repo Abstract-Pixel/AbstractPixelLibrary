@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using UnityEngine.SceneManagement;
 
 namespace AbstractPixel.Utility.Save
 {
@@ -11,6 +12,7 @@ namespace AbstractPixel.Utility.Save
         public string ProfileID;
         public string ProfileName;
         public string CreationDateAndTime;
+        public string LastSavedScene;
 
         public GameProfileManifest() { }
 
@@ -20,6 +22,7 @@ namespace AbstractPixel.Utility.Save
             ProfileName = SavePathGenerator.GameProfileSavesFolder + _profileId;
             CreationDateAndTime = DateTime.UtcNow.ToString("o");
             Version = Application.version;
+            LastSavedScene = SceneManager.GetActiveScene().name;
         }
     }
 }

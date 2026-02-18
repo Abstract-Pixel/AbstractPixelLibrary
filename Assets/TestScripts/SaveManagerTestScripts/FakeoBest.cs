@@ -5,31 +5,30 @@ using UnityEngine;
 
 
 [Serializable]
-public class leaderboardData
+public class LeaderboardData
 {
     public int bestTime;
     public int leaderboardCount;
     public int leaderboardIndex;
 
-    public leaderboardData(int bestTime, int leaderboardCount, int leaderboardIndex)
+    public LeaderboardData(int bestTime, int leaderboardCount, int leaderboardIndex)
     {
         this.bestTime = bestTime;
         this.leaderboardCount = leaderboardCount;
         this.leaderboardIndex = leaderboardIndex;
     }
 }
-
 [Saveable(SaveCategory.Game)]
-public class FakeoBest : MonoBehaviour, ISaveable<leaderboardData>
+public class FakeoBest : MonoBehaviour,ISaveable<LeaderboardData>
 {
-    [SerializeField] leaderboardData example;
+    [SerializeField] LeaderboardData example;
 
-    public leaderboardData CaptureData()
+    public LeaderboardData CaptureData()
     {
         return example;
     }
 
-    public void RestoreData(leaderboardData _loadedData)
+    public void RestoreData(LeaderboardData _loadedData)
     {
         example = _loadedData;
     }

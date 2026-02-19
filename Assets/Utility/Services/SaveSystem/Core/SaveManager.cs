@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -94,7 +95,7 @@ namespace AbstractPixel.Utility.Save
         public void LoadALL()
         {
             // This ensures we try to load every file type defined in your game.
-            foreach (SaveCatgeoryDefinition definition in saveConfig.GetAllCategoryDefintions())
+            foreach (SaveCatgeoryDefinition definition in saveConfig.GetAllCategoryDefinitions())
             {
                 LoadDataOf(definition.Category);
             }
@@ -102,7 +103,7 @@ namespace AbstractPixel.Utility.Save
 
         public void LoadAllDataByScope(SaveScope _directoryScope)
         {
-            foreach (SaveCatgeoryDefinition definition in saveConfig.GetAllCategoryDefintions())
+            foreach (SaveCatgeoryDefinition definition in saveConfig.GetAllCategoryDefinitions())
             {
                 if (_directoryScope != definition.DirectoryScope) continue;
                 LoadDataOf(definition.Category);
@@ -223,8 +224,17 @@ namespace AbstractPixel.Utility.Save
         }
 
         void OnSceneLoaded(Scene scene,LoadSceneMode loadSceneMode)
-        {
+        {       
+            if(saveConfig.IsSceneIgnored(scene.name)) { return; }
+            StartCoroutine(RestoreDataRoutine());
+        }
 
+        IEnumerator RestoreDataRoutine()
+        {
+            // Make sure everything in the scene is initialized before we try to restore data to objects.
+            // May add an extra wait if needed, but this should be sufficient for most cases.
+            yield return new WaitForEndOfFrame();
+            LoadAllDataByScope(SaveScope.GameProfile);
         }
     }
 }

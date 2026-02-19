@@ -11,6 +11,8 @@ namespace AbstractPixel.Utility.Save
         [field: SerializeField] public FileExtension PrimaryFileExtension { get; private set; } = FileExtension.json;
         [field: SerializeField] public FileExtension BackupFileExtension { get; private set; } = FileExtension.bak;
 
+        [SerializeField] List<string> ignoredScenes = new List<string>();
+
         [SerializeField] List<SaveCatgeoryDefinition> categoryDefinitionList;
 
         Dictionary<SaveCategory, SaveCatgeoryDefinition> categoryDefinitionMap = new();
@@ -51,12 +53,14 @@ namespace AbstractPixel.Utility.Save
             return null;
         }
 
-        public IReadOnlyList<SaveCatgeoryDefinition> GetAllCategoryDefintions()
+        public IReadOnlyList<SaveCatgeoryDefinition> GetAllCategoryDefinitions()
         {
             return categoryDefinitionList;
         }
 
-        
-
+        public bool IsSceneIgnored(string sceneName)
+        {
+            return ignoredScenes.Contains(sceneName);
+        }
     }
 }

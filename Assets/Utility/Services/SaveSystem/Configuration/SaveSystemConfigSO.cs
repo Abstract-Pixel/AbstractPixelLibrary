@@ -7,12 +7,12 @@ namespace AbstractPixel.Utility.Save
     public class SaveSystemConfigSO : ScriptableObject
     {
         [field: SerializeField] public bool UseDebugPath { get; private set; } = false;
-        [field:SerializeField] public int GameProfileGuidLength { get; private set; } = 6;
+        [field: SerializeField] public int GameProfileGuidLength { get; private set; } = 6;
+        [field: SerializeField] public SaveStartupPolicy StartupPolicy { get; private set; } = SaveStartupPolicy.Manual;
         [field: SerializeField] public FileExtension PrimaryFileExtension { get; private set; } = FileExtension.json;
-        [field: SerializeField] public FileExtension BackupFileExtension { get; private set; } = FileExtension.bak;
+        public FileExtension BackupFileExtension { get; private set; } = FileExtension.bak;
 
         [SerializeField] List<string> ignoredScenes = new List<string>();
-
         [SerializeField] List<SaveCatgeoryDefinition> categoryDefinitionList;
 
         Dictionary<SaveCategory, SaveCatgeoryDefinition> categoryDefinitionMap = new();
@@ -29,7 +29,7 @@ namespace AbstractPixel.Utility.Save
         public void Initialize()
         {
             categoryDefinitionMap = new Dictionary<SaveCategory, SaveCatgeoryDefinition>();
-            foreach(SaveCatgeoryDefinition definition in categoryDefinitionList)
+            foreach (SaveCatgeoryDefinition definition in categoryDefinitionList)
             {
                 if (!categoryDefinitionMap.ContainsKey(definition.Category))
                 {
@@ -40,7 +40,7 @@ namespace AbstractPixel.Utility.Save
                     Debug.LogWarning($"[SaveSystemConfigSO] - Duplicate category definition found for category: {definition.Category}");
                 }
             }
-  
+
         }
 
         public SaveCatgeoryDefinition GetCategoryDefinition(SaveCategory category)

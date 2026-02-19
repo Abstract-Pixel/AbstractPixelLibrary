@@ -1,6 +1,7 @@
 using AbstractPixel.Utility.Save;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 namespace AbstractPixel.Utility.Save
@@ -29,6 +30,12 @@ namespace AbstractPixel.Utility.Save
             CurrentProfilePath = _profilePath;
 
         }
+
+       /// <summary> 
+       /// Creates a new profile directory with a unique GUID.
+       /// </summary>
+       /// <param name="_profileGuid">The generated profile guid for the created profile directory</param>
+       /// <returns>The path to the created profile directory</returns>
 
         public string CreateProfileDirectory(out string _profileGuid)
         {
@@ -120,7 +127,7 @@ namespace AbstractPixel.Utility.Save
                     profileIds.Add(manifest.ProfileID);
                 }     
             }
-            return profileDirectories;
+            return profileIds.ToArray();
         }
 
         public bool DeleteProfileDirectory(string _profileId)

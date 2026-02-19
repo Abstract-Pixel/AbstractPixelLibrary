@@ -10,6 +10,7 @@ namespace AbstractPixel.Utility.Save
         public SaveCategory Category;
         public SaveScope DirectoryScope;
         public string CustomFileName;
-        public bool encryptFile;
+        public bool EncryptFile;
+        public bool IsSceneSpecific;
     }
 }

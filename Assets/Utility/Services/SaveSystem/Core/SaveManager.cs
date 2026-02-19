@@ -220,7 +220,7 @@ namespace AbstractPixel.Utility.Save
 
         private void OnDisable()
         {
-            
+            SceneManager.sceneLoaded -= OnSceneLoaded;
         }
 
         void OnSceneLoaded(Scene scene,LoadSceneMode loadSceneMode)

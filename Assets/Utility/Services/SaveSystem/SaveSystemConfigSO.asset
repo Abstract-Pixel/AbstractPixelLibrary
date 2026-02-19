@@ -16,29 +16,35 @@ MonoBehaviour:
   <GameProfileGuidLength>k__BackingField: 6
   <PrimaryFileExtension>k__BackingField: 1
   <BackupFileExtension>k__BackingField: 4
+  ignoredScenes: []
   categoryDefinitionList:
   - DisplayName: Input
     Category: 1
     DirectoryScope: 1
     CustomFileName: Input
-    encryptFile: 0
+    EncryptFile: 0
+    IsSceneSpecific: 0
   - DisplayName: Settings
     Category: 2
     DirectoryScope: 1
     CustomFileName: 
-    encryptFile: 0
+    EncryptFile: 0
+    IsSceneSpecific: 0
   - DisplayName: Game
     Category: 5
     DirectoryScope: 2
     CustomFileName: Profile
-    encryptFile: 0
+    EncryptFile: 0
+    IsSceneSpecific: 0
   - DisplayName: Achievements
     Category: 4
     DirectoryScope: 2
     CustomFileName: fakedData
-    encryptFile: 0
+    EncryptFile: 0
+    IsSceneSpecific: 0
   - DisplayName: Position
     Category: 3
     DirectoryScope: 2
-    CustomFileName: Posit
-    encryptFile: 0
+    CustomFileName: PositData
+    EncryptFile: 0
+    IsSceneSpecific: 1

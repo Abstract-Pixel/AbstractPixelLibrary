@@ -15,22 +15,30 @@ namespace AbstractPixel.Utility.Save
             InspectorElement.FillDefaultInspector(root, serializedObject, this);
 
             VisualElement debugContainer = new VisualElement();
+            debugContainer.AddToClassList("debug-container");
 
             Foldout debugFoldOut = new Foldout { text = "Debug Controls" };
+            debugFoldOut.AddToClassList("debug-foldout");
             VisualElement separatorFoldOut = new VisualElement();
+            separatorFoldOut.AddToClassList("separator");
             separatorFoldOut.style.height = 1;
 
             debugContainer.Add(separatorFoldOut);
             debugContainer.Add(debugFoldOut);
 
             Label editorControlsLabel = new Label("Editor Controls");
+            editorControlsLabel.AddToClassList("control-label");
             Button deleteAllSavesButton = new Button();
+            deleteAllSavesButton.AddToClassList("delete-saves-button");
             deleteAllSavesButton.text = "Delete All Saves";
             Button openReleaseSaveDirectory = new Button();
+            openReleaseSaveDirectory.AddToClassList("editor-control-button");
             openReleaseSaveDirectory.text = "Open Release Save Directory";
             Button openDebugSaveDirectory = new Button();
+            openDebugSaveDirectory.AddToClassList("editor-control-button");
             openDebugSaveDirectory.text = "Open Debug Save Directory";
             VisualElement editorControlsSeparator = new VisualElement();
+            editorControlsSeparator.AddToClassList("separator");
             editorControlsSeparator.style.height = 1;
 
             deleteAllSavesButton.clicked += DeleteAllSaves;
@@ -44,11 +52,15 @@ namespace AbstractPixel.Utility.Save
             debugFoldOut.Add(editorControlsSeparator);
 
             Label runtimeControlsLabel = new Label("Runtime Controls");
+            runtimeControlsLabel.AddToClassList("control-label");
             Button saveRuntimeDataButton = new Button();
+            saveRuntimeDataButton.AddToClassList("runtime-control-button");
             saveRuntimeDataButton.text = "SAVE ALL DATA !";
             Button loadRuntimeDataButton = new Button();
+            loadRuntimeDataButton.AddToClassList("runtime-control-button");
             loadRuntimeDataButton.text = "LOAD ALL DATA !";
             VisualElement runtimeControlsSeparator = new VisualElement();
+            runtimeControlsSeparator.AddToClassList("separator");
             runtimeControlsSeparator.style.height = 1;
 
             if (!EditorApplication.isPlaying)

@@ -6,7 +6,7 @@ using UnityEngine;
 [Saveable(SaveCategory.Game)]
 public class LameoSon : MonoBehaviour, ISaveable<Vector3Data>
 {
-    [SerializeField] Vector3 position;
+    [ReadOnly] public Vector3 position;
 
 
     public Vector3Data CaptureData()

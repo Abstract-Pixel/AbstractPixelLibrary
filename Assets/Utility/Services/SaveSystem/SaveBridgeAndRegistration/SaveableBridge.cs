@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -10,7 +9,7 @@ namespace AbstractPixel.Utility.Save
     public class SavableBridge : MonoBehaviour, ISavableBridge
     {
         [field: SerializeField] public string UniqueId { get; private set; }
-        [SerializeField, HideInInspector] string lastKnownInstanceID = "";
+        [SerializeField,HideInInspector] string lastKnownInstanceID = "";
 
         [SerializeField] private List<SaveableTarget> savableTargets = new List<SaveableTarget>();
         private List<SaveCategory> foundCategoriesList = new List<SaveCategory>();

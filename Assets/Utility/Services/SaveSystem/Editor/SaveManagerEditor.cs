@@ -3,31 +3,40 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using System.IO;
+using System;
 
 namespace AbstractPixel.Utility.Save
 {
     [CustomEditor(typeof(SaveManager))]
     public class SaveManagerEditor : Editor
     {
+        [SerializeField] StyleSheet saveManagerUSSStyleSheet;
         public override VisualElement CreateInspectorGUI()
         {
             VisualElement root = new VisualElement();
             InspectorElement.FillDefaultInspector(root, serializedObject, this);
+            saveManagerUSSStyleSheet=AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Utility/Services/SaveSystem/Editor/SaveManagerEditorUSS.uss");
+            if (saveManagerUSSStyleSheet != null)
+            {
+                root.styleSheets.Add(saveManagerUSSStyleSheet);
+            }
 
             VisualElement debugContainer = new VisualElement();
             debugContainer.AddToClassList("debug-container");
 
             Foldout debugFoldOut = new Foldout { text = "Debug Controls" };
             debugFoldOut.AddToClassList("debug-foldout");
-            VisualElement separatorFoldOut = new VisualElement();
-            separatorFoldOut.AddToClassList("separator");
-            separatorFoldOut.style.height = 1;
-
-            debugContainer.Add(separatorFoldOut);
             debugContainer.Add(debugFoldOut);
+
+            VisualElement emptySpace = new VisualElement();
+            emptySpace.style.height = 15;
+            debugFoldOut.Add(emptySpace);
 
             Label editorControlsLabel = new Label("Editor Controls");
             editorControlsLabel.AddToClassList("control-label");
+
+            VisualElement editorControlsContainer = new VisualElement();
+            editorControlsContainer.AddToClassList("editor-controls-container");
             Button deleteAllSavesButton = new Button();
             deleteAllSavesButton.AddToClassList("delete-saves-button");
             deleteAllSavesButton.text = "Delete All Saves";
@@ -37,31 +46,30 @@ namespace AbstractPixel.Utility.Save
             Button openDebugSaveDirectory = new Button();
             openDebugSaveDirectory.AddToClassList("editor-control-button");
             openDebugSaveDirectory.text = "Open Debug Save Directory";
-            VisualElement editorControlsSeparator = new VisualElement();
-            editorControlsSeparator.AddToClassList("separator");
-            editorControlsSeparator.style.height = 1;
 
             deleteAllSavesButton.clicked += DeleteAllSaves;
             openReleaseSaveDirectory.clicked += OpenReleaseDirectory;
             openDebugSaveDirectory.clicked += OpenDebugDirectory;
 
             debugFoldOut.Add(editorControlsLabel);
-            debugFoldOut.Add(deleteAllSavesButton);
-            debugFoldOut.Add(openReleaseSaveDirectory);
-            debugFoldOut.Add(openDebugSaveDirectory);
-            debugFoldOut.Add(editorControlsSeparator);
+            editorControlsContainer.Add(deleteAllSavesButton);
+            editorControlsContainer.Add(openReleaseSaveDirectory);
+            editorControlsContainer.Add(openDebugSaveDirectory);
+            debugFoldOut.Add(editorControlsContainer);
+
 
             Label runtimeControlsLabel = new Label("Runtime Controls");
             runtimeControlsLabel.AddToClassList("control-label");
+            VisualElement runtimeControlsContainer = new VisualElement();
+            runtimeControlsContainer.AddToClassList("runtime-controls-container");
             Button saveRuntimeDataButton = new Button();
             saveRuntimeDataButton.AddToClassList("runtime-control-button");
             saveRuntimeDataButton.text = "SAVE ALL DATA !";
             Button loadRuntimeDataButton = new Button();
             loadRuntimeDataButton.AddToClassList("runtime-control-button");
             loadRuntimeDataButton.text = "LOAD ALL DATA !";
-            VisualElement runtimeControlsSeparator = new VisualElement();
-            runtimeControlsSeparator.AddToClassList("separator");
-            runtimeControlsSeparator.style.height = 1;
+
+
 
             if (!EditorApplication.isPlaying)
             {
@@ -97,9 +105,9 @@ namespace AbstractPixel.Utility.Save
             };
 
             debugFoldOut.Add(runtimeControlsLabel);
-            debugFoldOut.Add(saveRuntimeDataButton);
-            debugFoldOut.Add(loadRuntimeDataButton);
-            debugFoldOut.Add(runtimeControlsSeparator);
+            runtimeControlsContainer.Add(saveRuntimeDataButton);
+            runtimeControlsContainer.Add(loadRuntimeDataButton);
+            debugFoldOut.Add(runtimeControlsContainer);
 
             root.Add(debugContainer);
             return root;

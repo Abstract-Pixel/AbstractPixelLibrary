@@ -4,14 +4,23 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
+
 namespace AbstractPixel.Utility.Save
 {
+    /// <summary>Provides a bridge component for managing the saving and restoring of state for associated saveable targets
+    /// within a Unity GameObject. Implements the ISavableBridge interface to support category-based serialization and
+    /// deserialization of component data.</summary>
+    /// <remarks>Attach this component to a GameObject to enable save and restore functionality for all
+    /// components on the GameObject that implement the ISaveable<T> interface and are marked with the
+    /// SaveableAttribute. The SavableBridge automatically discovers eligible components and manages their unique
+    /// identification and registration with the SaveManager.</remarks>
     public class SavableBridge : MonoBehaviour, ISavableBridge
     {
-        [field: SerializeField,ReadOnly(true)] public string UniqueId { get; private set; }
-        [SerializeField,HideInInspector] string lastKnownInstanceID = "";
+        [field: SerializeField, ReadOnly(true)] public string UniqueId { get; private set; }
+        [SerializeField, HideInInspector] string lastKnownGlobalObjectID = "";
+        [SerializeField, HideInInspector] string lastKnownGameObjectName;
 
-        [SerializeField,ReadOnly] private List<SaveableTarget> savableTargets = new List<SaveableTarget>();
+        [SerializeField, ReadOnly] private List<SaveableTarget> savableTargets = new List<SaveableTarget>();
         private List<SaveCategory> foundCategoriesList = new List<SaveCategory>();
 
         private Dictionary<SaveCategory, List<SaveableTarget>> savableTargetsRegistry;
@@ -23,52 +32,96 @@ namespace AbstractPixel.Utility.Save
 #if UNITY_EDITOR
         private void OnValidate()
         {
-            if (lastKnownInstanceID != GetCurrentGlobalID() || string.IsNullOrEmpty(UniqueId))
-            {
-                string guid = Guid.NewGuid().ToString();
-                UniqueId = $"{gameObject.name} GameObject {stringSeparatorIdentifier}[{guid}]";
-                lastKnownInstanceID = GetCurrentGlobalID();
-            }
+            if (Application.isPlaying) return;
 
+            UnityEditor.EditorApplication.hierarchyChanged -= OnHierarchyChanged;
+            UnityEditor.EditorApplication.hierarchyChanged += OnHierarchyChanged;
+
+            ValidateIdentity();
+            SyncSavableTargets();
+        }
+
+        private void ValidateIdentity()
+        {
+            string currentGlobalId = UnityEditor.GlobalObjectId.GetGlobalObjectIdSlow(this).ToString();
+            bool isNewOrDuplicated = lastKnownGlobalObjectID != currentGlobalId || string.IsNullOrEmpty(UniqueId);
+            bool isRenamed = lastKnownGameObjectName != gameObject.name;
+
+            if (isNewOrDuplicated)
+            {
+                string newGuid = Guid.NewGuid().ToString();
+                UniqueId = $"{gameObject.name} GameObject {stringSeparatorIdentifier}[{newGuid}]";
+
+                lastKnownGlobalObjectID = currentGlobalId;
+                lastKnownGameObjectName = gameObject.name;
+                UnityEditor.EditorUtility.SetDirty(this);
+            }
+            else if (isRenamed)
+            {
+                int separatorIndex = UniqueId.IndexOf(stringSeparatorIdentifier);
+                if (separatorIndex >= 0)
+                {
+                    // Extract everything from the '#' to the end
+                    string pureGuidPart = UniqueId.Substring(separatorIndex);
+
+                    // Stitch the new name with the old GUID
+                    UniqueId = $"{gameObject.name} GameObject {pureGuidPart}";
+                    lastKnownGameObjectName = gameObject.name;
+
+                    UnityEditor.EditorUtility.SetDirty(this);
+                }
+            }
+        }
+        private void OnHierarchyChanged()
+        {
+            if (Application.isPlaying || this == null) return;
+
+            // Performance check: Only run the heavy logic if OUR name actually changed
+            if (lastKnownGameObjectName != gameObject.name)
+            {
+                ValidateIdentity();
+            }
+        }
+
+        private void SyncSavableTargets()
+        {
             if (savableTargets == null) savableTargets = new List<SaveableTarget>();
 
             MonoBehaviour[] allScripts = GetComponents<MonoBehaviour>();
             List<MonoBehaviour> validScripts = new List<MonoBehaviour>();
 
-            foreach (var script in allScripts)
+            foreach (MonoBehaviour script in allScripts)
             {
                 if (script == null) continue;
                 Type type = script.GetType();
-
-                Type interfaceType = type.GetInterface(typeof(ISaveable<>).Name);
-                if (interfaceType == null) continue;
-
+                if (type.GetInterface(typeof(ISaveable<>).Name) == null) continue;
                 if (type.GetCustomAttribute<SaveableAttribute>() == null) continue;
-
                 validScripts.Add(script);
             }
 
-            //Clean up removed scripts from the list
+            //Clean up removed scripts
             for (int i = savableTargets.Count - 1; i >= 0; i--)
             {
                 if (savableTargets[i] == null || savableTargets[i].Script == null || !validScripts.Contains(savableTargets[i].Script))
                 {
                     savableTargets.RemoveAt(i);
+                    UnityEditor.EditorUtility.SetDirty(this);
                 }
             }
 
+            // Add or Update Targets
             foreach (MonoBehaviour script in validScripts)
             {
-                // Check if we already have a registration for this specific script reference
                 SaveableTarget existingTarget = savableTargets.FirstOrDefault(t => t.Script == script);
 
                 if (existingTarget != null)
                 {
-                    // Update Debug Name (In case class was renamed, but we keep the GUID)
-                    if (existingTarget.Identification != null)
+                    if (existingTarget.Identification != null && existingTarget.Identification.ClassName != script.GetType().Name)
                     {
+                        // This handles the case where a script was renamed. We keep the same GUID but update the class name for clarity.
                         existingTarget.Identification.ClassName = script.GetType().Name;
                         existingTarget.InpsectorName = script.GetType().Name;
+                        UnityEditor.EditorUtility.SetDirty(this);
                     }
                 }
                 else
@@ -76,17 +129,12 @@ namespace AbstractPixel.Utility.Save
                     string newGuid = Guid.NewGuid().ToString();
                     SaveableIdentification id = new SaveableIdentification(script.GetType().Name, newGuid);
                     savableTargets.Add(new SaveableTarget(script, id));
+                    UnityEditor.EditorUtility.SetDirty(this);
                 }
             }
-            string GetCurrentGlobalID()
-            {
-                UnityEditor.GlobalObjectId globalId = UnityEditor.GlobalObjectId.GetGlobalObjectIdSlow(this);
-                return globalId.ToString();
-            }
         }
+
 #endif
-
-
 
         private void Awake()
         {

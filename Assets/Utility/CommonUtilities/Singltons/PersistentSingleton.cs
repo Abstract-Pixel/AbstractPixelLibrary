@@ -7,7 +7,7 @@ namespace AbstractPixel.Utility
         public bool AutoUnparentOnAwake = true;
 
         protected static T instance;
-
+        protected static bool isApplicationQuitting = false;
         public static bool HasInstance => instance != null;
         public static T TryGetInstance() => HasInstance ? instance : null;
 
@@ -15,7 +15,7 @@ namespace AbstractPixel.Utility
         {
             get
             {
-                if (instance == null)
+                if (instance == null && !isApplicationQuitting)
                 {
                     instance = FindAnyObjectByType<T>();
                     if (instance == null)
@@ -34,13 +34,13 @@ namespace AbstractPixel.Utility
         /// </summary>
         protected virtual void Awake()
         {
+            if (!Application.isPlaying || isApplicationQuitting) return;
             InitializeSingleton();
         }
 
         protected virtual void InitializeSingleton()
         {
-            if (!Application.isPlaying) return;
-
+            isApplicationQuitting = false;
             if (AutoUnparentOnAwake)
             {
                 transform.SetParent(null);
@@ -58,6 +58,17 @@ namespace AbstractPixel.Utility
                     Destroy(gameObject);
                 }
             }
+        }
+
+        private void OnDestroy()
+        {
+            instance = null;
+            isApplicationQuitting = false;
+        }
+
+        private void OnApplicationQuit()
+        {
+            isApplicationQuitting = true;
         }
     }
 }

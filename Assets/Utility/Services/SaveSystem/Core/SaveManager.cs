@@ -210,7 +210,7 @@ namespace AbstractPixel.Utility.Save
 
         public void UnregisterSavableObject(ISavableBridge bridge, List<SaveCategory> categories)
         {
-            if (IsInstanceNull()) return;
+            if (IsInstanceNull() || savableObjectsRegistry ==null) return;
             if (bridge == null || categories == null) return;
 
             int separatorIndex = bridge.UniqueId.LastIndexOf(stringSeparatorIdentifier) + 1;

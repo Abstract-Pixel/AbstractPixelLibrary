@@ -34,8 +34,10 @@
     font-size: 12px;
     -unity-text-align: LowerLeft;
     padding-left: 28px;
-    padding-top: 1.5px;
+    padding-top: 1px;
     background-color: #323232;
+    border-top-width: 1px;
+    border-color: #242424;
 }
 
 .editor-controls-container {
@@ -43,9 +45,6 @@
     padding-left: 35px;
     padding-right: 35px;
     padding-bottom: 5px;
-
-    border-bottom-width: 1px;
-    border-top-width: 1px;
     border-color: #242424;
 }
 

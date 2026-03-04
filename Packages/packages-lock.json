@@ -1,13 +1,5 @@
 {
   "dependencies": {
-    "com.abstractpixel.library": {
-      "version": "file:C:/Users/avig7/Desktop/All Unity/AbstractPixel-CodeLibrary",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {
-        "com.unity.nuget.newtonsoft-json": "3.2.2"
-      }
-    },
     "com.unity.ai.navigation": {
       "version": "2.0.9",
       "depth": 0,

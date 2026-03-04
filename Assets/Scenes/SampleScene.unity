@@ -251,7 +251,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: AbstractPixel.Utility.Save::AbstractPixel.Utility.Save.SaveManager
   AutoUnparentOnAwake: 1
   saveConfig: {fileID: 11400000, guid: 79c67943837e9df43a6d5974e87d3bd7, type: 2}
-  hasDoneInitialBootLoad: 0
 --- !u!4 &1342621203
 Transform:
   m_ObjectHideFlags: 0
@@ -276,8 +275,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1561839625}
-  - component: {fileID: 1561839624}
-  - component: {fileID: 1561839626}
   - component: {fileID: 1561839627}
   m_Layer: 0
   m_Name: gazo
@@ -286,19 +283,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1561839624
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1561839623}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 012f7127e9b420c458e6eaaccde6e377, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LameoSon
-  position: {x: 100, y: 0, z: 100}
 --- !u!4 &1561839625
 Transform:
   m_ObjectHideFlags: 0
@@ -314,25 +298,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1561839626
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1561839623}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9cb70a81a136e0f4190875f109df1a2b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Booyah
-  exampleField: 100
-  leaderboard:
-    score: 69
-    position: {x: 0, y: 0, z: 0}
-    playerName: 
-    isLeaderboard: 0
-  istesting: 0
 --- !u!114 &1561839627
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -348,13 +313,7 @@ MonoBehaviour:
   <UniqueId>k__BackingField: 'gazo GameObject #[62bf9bbc-afde-492a-84ab-571016760559]'
   lastKnownGlobalObjectID: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-1561839627-0
   lastKnownGameObjectName: gazo
-  savableTargets:
-  - InpsectorName: LameoSon
-    Script: {fileID: 1561839624}
-    Identification:
-      ClassName: LameoSon
-      GUID: 1df2f929-8aab-466b-961f-abf6e3b0718c
-  foundCategoriesList: 
+  savableTargets: []
 --- !u!1 &1586333314
 GameObject:
   m_ObjectHideFlags: 0

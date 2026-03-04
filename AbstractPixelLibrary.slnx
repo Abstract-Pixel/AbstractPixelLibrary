@@ -4,6 +4,5 @@
   <Project Path="CustomInspector.Helpers.Editor.csproj" />
   <Project Path="CustomInspector.Editor.csproj" />
   <Project Path="CustomInspector.Helpers.csproj" />
-  <Project Path="NuGetForUnity.csproj" />
   <Project Path="CustomInspector.Demo.csproj" />
 </Solution>

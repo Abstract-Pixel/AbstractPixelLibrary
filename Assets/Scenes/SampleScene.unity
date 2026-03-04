@@ -163,15 +163,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0097ab95a37ed2144a026bc80ab6bb81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TestManager
-  broTest:
-    rid: 4231831505204150347
-  references:
-    version: 2
-    RefIds:
-    - rid: 4231831505204150347
-      type: {class: BasicTest, ns: , asm: Assembly-CSharp}
-      data:
-        magic: 0
 --- !u!1 &541943678
 GameObject:
   m_ObjectHideFlags: 0
@@ -275,7 +266,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1561839625}
-  - component: {fileID: 1561839627}
   m_Layer: 0
   m_Name: gazo
   m_TagString: Untagged
@@ -298,22 +288,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1561839627
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1561839623}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da8848201ba4a9947ae8a09b00a2df07, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: AbstractPixel.Utility.Save::AbstractPixel.Utility.Save.SavableBridge
-  <UniqueId>k__BackingField: 'gazo GameObject #[62bf9bbc-afde-492a-84ab-571016760559]'
-  lastKnownGlobalObjectID: GlobalObjectId_V1-2-99c9720ab356a0642a771bea13969a05-1561839627-0
-  lastKnownGameObjectName: gazo
-  savableTargets: []
 --- !u!1 &1586333314
 GameObject:
   m_ObjectHideFlags: 0
